@@ -2,16 +2,12 @@ package org.example.company;
 
 import org.example.company.employer.Employer;
 import org.example.company.employer.ITRole;
-import org.example.company.employer.Worker;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 @Component("CompanyComponent")
-public class ITCompany extends EntityManager<Employer<ITRole>> {
+public class ITCompany extends EmployerManager<Employer<ITRole>> {
     private String name;
     private Employer<ITRole> director;
 
@@ -21,7 +17,7 @@ public class ITCompany extends EntityManager<Employer<ITRole>> {
     }
 
     public void startWork(){
-        getEntities().forEach(worker -> {
+        getEmployers().forEach(worker -> {
             worker.work();
             System.out.println(worker.getName() + "is " + worker.getRole());
         });

@@ -23,22 +23,22 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void addDeveloper(Developer developer) {
-        company.getEntities().add(developer);
+        company.getEmployers().add(developer);
     }
 
     @Override
     public void addPM(PM pm) {
-        company.getEntities().add(pm);
+        company.getEmployers().add(pm);
     }
 
     @Override
     public Employer<ITRole> getEmployerByIndex(int index) {
-        return company.getEntities().get(index);
+        return company.getEmployers().get(index);
     }
 
     @Override
     public List<Employer<ITRole>> getEmployerByRole(ITRole role) {
-        return company.getEntities().stream()
+        return company.getEmployers().stream()
                 .filter(employer -> employer.getRole().equals(role))
                 .collect(Collectors.toList());
     }
