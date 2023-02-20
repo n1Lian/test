@@ -8,13 +8,20 @@ import org.example.company.employer.PM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private ITCompany company;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public ITCompany getCompany() {
@@ -23,7 +30,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public void addDeveloper(Developer developer) {
-        company.getEmployers().add(developer);
+        entityManager.persist(developer);
+        //company.getEmployers().add(developer);
     }
 
     @Override

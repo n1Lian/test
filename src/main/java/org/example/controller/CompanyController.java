@@ -16,33 +16,33 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/company")
 public class CompanyController {
     @Autowired
     private CompanyService companyService;
 
-    @GetMapping
+    @RequestMapping(value = "/company", method = RequestMethod.GET)
     public CompanyDTO getCompany() {
+        log.info("Log info: Send info about company");
         return CompanyDTO.from(companyService.getCompany());
     }
 
-    @PostMapping("/employers/developers")
+    @RequestMapping(value = "/company/employers/developers", method = RequestMethod.POST)
     public ResponseEntity addEmployer(@RequestBody Developer developer) {
         companyService.addDeveloper(developer);
-        log.info("Add new developer");
+        log.info("Log info: Add new developer");
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/employers/PMs")
+    @RequestMapping(value = "/company/employers/PMs", method = RequestMethod.POST)
     public ResponseEntity addEmployer(@RequestBody PM pm) {
         companyService.addPM(pm);
-        log.info("Add new PM");
+        log.info("Log info: Add new PM");
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/employers/{index}")
+    @RequestMapping(value = "/company/employers/{index}", method = RequestMethod.GET)
     public ResponseEntity<Employer<ITRole>> getEmployerByIndex(@PathVariable int index) {
-        log.info("Get employer by index = " + index);
+        log.info("Log info: Get employer by index = " + index);
         try {
             return ResponseEntity.ok(companyService.getEmployerByIndex(index));
         } catch (IndexOutOfBoundsException e) {
@@ -50,9 +50,9 @@ public class CompanyController {
         }
     }
 
-    @GetMapping("/employers/find")
+    @RequestMapping(value = "/company/employers/find", method = RequestMethod.GET)
     public ResponseEntity<List<Employer<ITRole>>> getEmployerByRole(@RequestParam(name = "role") ITRole role) {
-        log.info("Get employer by role = " + role);
+        log.info("Log info: Get employer by role = " + role);
         try {
             return ResponseEntity.ok(companyService.getEmployerByRole(role));
         } catch (IndexOutOfBoundsException e) {

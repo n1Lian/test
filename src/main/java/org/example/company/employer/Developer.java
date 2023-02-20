@@ -1,9 +1,18 @@
 package org.example.company.employer;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Objects;
-
+@Entity
+@Table(name = "developers")
 public class Developer extends Employer<ITRole> {
+    @Column(name = "language")
     private String language;
+
+    public Developer() {
+    }
 
     public Developer(String name, int age, String language)
     {
