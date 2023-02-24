@@ -2,59 +2,78 @@ package org.example.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.dto.CompanyDTO;
-import org.example.company.employer.Developer;
-import org.example.company.employer.Employer;
-import org.example.company.employer.ITRole;
-import org.example.company.employer.PM;
+import org.example.company.employee.Developer;
+import org.example.company.employee.Employee;
+import org.example.company.employee.ITRole;
+import org.example.company.employee.PM;
+import org.example.dto.ITEmployeeDTO;
 import org.example.service.CompanyService;
-import org.example.service.CompanyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+// Проблемы: Не реализован метод получения рабочего за ролью
 
 @Slf4j
 @RestController
+@RequestMapping("/company")
 public class CompanyController {
     @Autowired
     private CompanyService companyService;
 
-    @RequestMapping(value = "/company", method = RequestMethod.GET)
-    public CompanyDTO getCompany() {
-        log.info("Log info: Send info about company");
-        return CompanyDTO.from(companyService.getCompany());
+    @PostMapping
+    public Integer createCompany(@RequestBody CompanyDTO companyDTO) {
+        return companyService.createCompany(companyDTO.toCompany());
     }
 
-    @RequestMapping(value = "/company/employers/developers", method = RequestMethod.POST)
-    public ResponseEntity addEmployer(@RequestBody Developer developer) {
-        companyService.addDeveloper(developer);
+    @GetMapping("/{id}")
+    public CompanyDTO company(@PathVariable int id) {
+        log.info("Log info: Send info about company");
+        return CompanyDTO.from(companyService.getCompany(id));
+    }
+
+    @PostMapping("/{id}}/employees/developers")
+    public ResponseEntity addEmployee(
+            @RequestBody Developer developer,
+            @PathVariable(name = "id") int company_id) {
+        companyService.addDeveloper(developer, company_id);
         log.info("Log info: Add new developer");
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/company/employers/PMs", method = RequestMethod.POST)
-    public ResponseEntity addEmployer(@RequestBody PM pm) {
+    @PostMapping("/{id}}/employees/PMs")
+    public ResponseEntity addEmployee(
+            @RequestBody PM pm,
+            @PathVariable(name = "id") int company_id) {
         companyService.addPM(pm);
         log.info("Log info: Add new PM");
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/company/employers/{index}", method = RequestMethod.GET)
-    public ResponseEntity<Employer<ITRole>> getEmployerByIndex(@PathVariable int index) {
-        log.info("Log info: Get employer by index = " + index);
+    @GetMapping("employers/{id}")
+    public ResponseEntity<Employee<ITRole>> getEmployerById(@PathVariable int id) {
+        log.info("Log info: Get employer by id = " + id);
         try {
-            return ResponseEntity.ok(companyService.getEmployerByIndex(index));
+            return ResponseEntity.ok(companyService.getEmployeeById(id));
         } catch (IndexOutOfBoundsException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @RequestMapping(value = "/company/employers/find", method = RequestMethod.GET)
-    public ResponseEntity<List<Employer<ITRole>>> getEmployerByRole(@RequestParam(name = "role") ITRole role) {
-        log.info("Log info: Get employer by role = " + role);
+    @GetMapping("/{id}/employees/find")
+    public ResponseEntity<List<ITEmployeeDTO>> getEmployerByRole(
+            @RequestParam(name = "role") ITRole role,
+            @PathVariable(name = "id") int company_id) {
         try {
-            return ResponseEntity.ok(companyService.getEmployerByRole(role));
+        List<ITEmployeeDTO> result = companyService.getEmployeeByRole(role, company_id)
+                .stream()
+                .map(ITEmployeeDTO::from)
+                .collect(Collectors.toList());
+            log.info("Log info: Get employer by role = " + role);
+        return ResponseEntity.ok(result);
         } catch (IndexOutOfBoundsException e) {
             return ResponseEntity.notFound().build();
         }

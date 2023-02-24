@@ -1,6 +1,6 @@
-package org.example.company.employer;
+package org.example.company.employee;
 
-public class PM extends Employer<ITRole>{
+public class PM extends Employee<ITRole> {
     public PM(String name, int age) {
         super(name, age, ITRole.PM);
     }

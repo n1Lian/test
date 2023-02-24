@@ -1,10 +1,10 @@
 package org.example.service;
 
 import org.example.company.ITCompany;
-import org.example.company.employer.Developer;
-import org.example.company.employer.Employer;
-import org.example.company.employer.ITRole;
-import org.example.company.employer.PM;
+import org.example.company.employee.Developer;
+import org.example.company.employee.Employee;
+import org.example.company.employee.ITRole;
+import org.example.company.employee.PM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +14,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// Проблемы: Не реализован метод получения рабочего за ролью
+
 @Service
-@Transactional
 public class CompanyServiceImpl implements CompanyService {
     @Autowired
     private ITCompany company;
@@ -24,29 +25,42 @@ public class CompanyServiceImpl implements CompanyService {
     private EntityManager entityManager;
 
     @Override
-    public ITCompany getCompany() {
-        return company;
+    @Transactional
+    public Integer createCompany(ITCompany company) {
+        entityManager.persist(company);
+        entityManager.flush();
+        return company.getId();
     }
 
     @Override
-    public void addDeveloper(Developer developer) {
+    public ITCompany getCompany(int company_id) {
+        return entityManager.find(ITCompany.class, company_id);
+    }
+
+    @Override
+    @Transactional
+    public void addDeveloper(Developer developer, int company_id) {
+        developer.setCompany(getCompany(company_id));
         entityManager.persist(developer);
-        //company.getEmployers().add(developer);
     }
 
     @Override
     public void addPM(PM pm) {
-        company.getEmployers().add(pm);
+        company.getEmployees().add(pm);
     }
 
     @Override
-    public Employer<ITRole> getEmployerByIndex(int index) {
-        return company.getEmployers().get(index);
+    @Transactional
+    public Employee<ITRole> getEmployeeById(int id) {
+        Developer developer = entityManager.find(Developer.class, id);
+        entityManager.detach(developer);
+        return developer;
     }
 
     @Override
-    public List<Employer<ITRole>> getEmployerByRole(ITRole role) {
-        return company.getEmployers().stream()
+    @Transactional
+    public List<Employee<ITRole>> getEmployeeByRole(ITRole role, int company_id) {
+        return getCompany(company_id).getEmployees().stream()
                 .filter(employer -> employer.getRole().equals(role))
                 .collect(Collectors.toList());
     }

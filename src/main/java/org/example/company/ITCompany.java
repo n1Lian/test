@@ -1,15 +1,22 @@
 package org.example.company;
 
-import org.example.company.employer.Employer;
-import org.example.company.employer.ITRole;
-import org.springframework.stereotype.Component;
+import org.example.company.employee.Employee;
+import org.example.company.employee.ITRole;
 
+import javax.persistence.*;
 import java.util.Objects;
 
-@Component("CompanyComponent")
-public class ITCompany extends EmployerManager<Employer<ITRole>> {
+@Entity
+@Table(name = "companies")
+public class ITCompany extends EmployeeManager<Employee<ITRole>> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @Column(name = "name")
     private String name;
-    private Employer<ITRole> director;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "director_id")
+    private Employee<ITRole> director;
 
     public ITCompany(String companyName) {
         super();
@@ -17,7 +24,7 @@ public class ITCompany extends EmployerManager<Employer<ITRole>> {
     }
 
     public void startWork(){
-        getEmployers().forEach(worker -> {
+        getEmployees().forEach(worker -> {
             worker.work();
             System.out.println(worker.getName() + "is " + worker.getRole());
         });
@@ -30,12 +37,16 @@ public class ITCompany extends EmployerManager<Employer<ITRole>> {
         this.name = name;
     }
 
-    public Employer<ITRole> getDirector(){
+    public Employee<ITRole> getDirector(){
         return director;
     }
 
-    public void setDirector(Employer<ITRole> director) {
+    public void setDirector(Employee<ITRole> director) {
         this.director = director;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     @Override

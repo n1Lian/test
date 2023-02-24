@@ -1,4 +1,4 @@
-package org.example.company.employer;
+package org.example.company.employee;
 
 public enum ITRole {
     PM,
