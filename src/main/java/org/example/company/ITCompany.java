@@ -18,6 +18,10 @@ public class ITCompany extends EmployeeManager<Employee<ITRole>> {
     @JoinColumn(name = "director_id")
     private Employee<ITRole> director;
 
+    public ITCompany() {
+
+    }
+
     public ITCompany(String companyName) {
         super();
         this.name = companyName;

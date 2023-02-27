@@ -14,8 +14,7 @@ public class Developer extends Employee<ITRole> {
     public Developer() {
     }
 
-    public Developer(String name, int age, String language)
-    {
+    public Developer(String name, int age, String language) {
         super(name, age, ITRole.Developer);
         this.language = language;
     }

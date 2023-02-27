@@ -35,7 +35,7 @@ public class CompanyController {
         return CompanyDTO.from(companyService.getCompany(id));
     }
 
-    @PostMapping("/{id}}/employees/developers")
+    @PostMapping("/{id}/employees/developers")
     public ResponseEntity addEmployee(
             @RequestBody Developer developer,
             @PathVariable(name = "id") int company_id) {
@@ -44,20 +44,21 @@ public class CompanyController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{id}}/employees/PMs")
+    @PostMapping("/{id}/employees/PMs")
     public ResponseEntity addEmployee(
             @RequestBody PM pm,
             @PathVariable(name = "id") int company_id) {
-        companyService.addPM(pm);
+        companyService.addPM(pm, company_id);
         log.info("Log info: Add new PM");
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("employers/{id}")
-    public ResponseEntity<Employee<ITRole>> getEmployerById(@PathVariable int id) {
-        log.info("Log info: Get employer by id = " + id);
+    @GetMapping("employees/{id}")
+    public ResponseEntity<ITEmployeeDTO> getEmployerById(@PathVariable int id) {
         try {
-            return ResponseEntity.ok(companyService.getEmployeeById(id));
+            ITEmployeeDTO employeeDTO = ITEmployeeDTO.from(companyService.getEmployeeById(id));
+            log.info("Log info: Get employer by id = " + id);
+            return ResponseEntity.ok(employeeDTO);
         } catch (IndexOutOfBoundsException e) {
             return ResponseEntity.notFound().build();
         }
@@ -72,7 +73,7 @@ public class CompanyController {
                 .stream()
                 .map(ITEmployeeDTO::from)
                 .collect(Collectors.toList());
-            log.info("Log info: Get employer by role = " + role);
+        log.info("Log info: Get employer by role = " + role);
         return ResponseEntity.ok(result);
         } catch (IndexOutOfBoundsException e) {
             return ResponseEntity.notFound().build();

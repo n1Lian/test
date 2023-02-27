@@ -5,56 +5,52 @@ import org.example.company.employee.Developer;
 import org.example.company.employee.Employee;
 import org.example.company.employee.ITRole;
 import org.example.company.employee.PM;
+import org.example.dao.CompanyDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// Проблемы: Не реализован метод получения рабочего за ролью
+// Проблемы:
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
-    @Autowired
-    private ITCompany company;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private CompanyDAO companyDAO;
 
     @Override
     @Transactional
     public Integer createCompany(ITCompany company) {
-        entityManager.persist(company);
-        entityManager.flush();
-        return company.getId();
+        return companyDAO.create(company);
     }
 
     @Override
+    @Transactional
     public ITCompany getCompany(int company_id) {
-        return entityManager.find(ITCompany.class, company_id);
+        return companyDAO.find(company_id);
     }
 
     @Override
     @Transactional
     public void addDeveloper(Developer developer, int company_id) {
         developer.setCompany(getCompany(company_id));
-        entityManager.persist(developer);
+        companyDAO.addDeveloper(developer);
     }
 
     @Override
-    public void addPM(PM pm) {
-        company.getEmployees().add(pm);
+    @Transactional
+    public void addPM(PM pm, int company_id) {
+        pm.setCompany(getCompany(company_id));
+        companyDAO.addPM(pm);
     }
 
     @Override
     @Transactional
     public Employee<ITRole> getEmployeeById(int id) {
-        Developer developer = entityManager.find(Developer.class, id);
-        entityManager.detach(developer);
-        return developer;
+        return companyDAO.findEmployee(id);
     }
 
     @Override

@@ -13,7 +13,7 @@ public interface CompanyService {
 
     void addDeveloper(Developer developer, int company_id);
 
-    void addPM(PM pm);
+    void addPM(PM pm, int company_id);
 
     Employee<ITRole> getEmployeeById(int id);
 
