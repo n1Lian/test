@@ -23,39 +23,39 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional
-    public Integer createCompany(ITCompany company) {
+    public Long createCompany(ITCompany company) {
         return companyDAO.create(company);
     }
 
     @Override
     @Transactional
-    public ITCompany getCompany(int company_id) {
+    public ITCompany getCompany(long company_id) {
         return companyDAO.find(company_id);
     }
 
     @Override
     @Transactional
-    public void addDeveloper(Developer developer, int company_id) {
+    public void addDeveloper(Developer developer, long company_id) {
         developer.setCompany(getCompany(company_id));
         companyDAO.addDeveloper(developer);
     }
 
     @Override
     @Transactional
-    public void addPM(PM pm, int company_id) {
+    public void addPM(PM pm, long company_id) {
         pm.setCompany(getCompany(company_id));
         companyDAO.addPM(pm);
     }
 
     @Override
     @Transactional
-    public Employee<ITRole> getEmployeeById(int id) {
+    public Employee<ITRole> getEmployeeById(long id) {
         return companyDAO.findEmployee(id);
     }
 
     @Override
     @Transactional
-    public List<Employee<ITRole>> getEmployeeByRole(ITRole role, int company_id) {
+    public List<Employee<ITRole>> getEmployeeByRole(ITRole role, long company_id) {
         return getCompany(company_id).getEmployees().stream()
                 .filter(employer -> employer.getRole().equals(role))
                 .collect(Collectors.toList());

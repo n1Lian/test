@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface CompanyService {
 
-    Integer createCompany(ITCompany company);
+    Long createCompany(ITCompany company);
 
-    ITCompany getCompany(int id);
+    ITCompany getCompany(long id);
 
-    void addDeveloper(Developer developer, int company_id);
+    void addDeveloper(Developer developer, long company_id);
 
-    void addPM(PM pm, int company_id);
+    void addPM(PM pm, long company_id);
 
-    Employee<ITRole> getEmployeeById(int id);
+    Employee<ITRole> getEmployeeById(long id);
 
-    List<Employee<ITRole>> getEmployeeByRole(ITRole role, int company_id);
+    List<Employee<ITRole>> getEmployeeByRole(ITRole role, long company_id);
 }

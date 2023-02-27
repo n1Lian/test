@@ -11,7 +11,7 @@ import java.util.Objects;
 public class ITCompany extends EmployeeManager<Employee<ITRole>> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Long id;
     @Column(name = "name")
     private String name;
     @OneToOne(cascade = CascadeType.ALL)
@@ -49,7 +49,7 @@ public class ITCompany extends EmployeeManager<Employee<ITRole>> {
         this.director = director;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

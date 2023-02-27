@@ -25,7 +25,7 @@ public class CompanyController {
     private CompanyService companyService;
 
     @PostMapping
-    public Integer createCompany(@RequestBody CompanyDTO companyDTO) {
+    public Long createCompany(@RequestBody CompanyDTO companyDTO) {
         return companyService.createCompany(companyDTO.toCompany());
     }
 
@@ -38,7 +38,7 @@ public class CompanyController {
     @PostMapping("/{id}/employees/developers")
     public ResponseEntity addEmployee(
             @RequestBody Developer developer,
-            @PathVariable(name = "id") int company_id) {
+            @PathVariable(name = "id") long company_id) {
         companyService.addDeveloper(developer, company_id);
         log.info("Log info: Add new developer");
         return ResponseEntity.ok().build();
@@ -47,14 +47,14 @@ public class CompanyController {
     @PostMapping("/{id}/employees/PMs")
     public ResponseEntity addEmployee(
             @RequestBody PM pm,
-            @PathVariable(name = "id") int company_id) {
+            @PathVariable(name = "id") long company_id) {
         companyService.addPM(pm, company_id);
         log.info("Log info: Add new PM");
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("employees/{id}")
-    public ResponseEntity<ITEmployeeDTO> getEmployerById(@PathVariable int id) {
+    public ResponseEntity<ITEmployeeDTO> getEmployerById(@PathVariable long id) {
         try {
             ITEmployeeDTO employeeDTO = ITEmployeeDTO.from(companyService.getEmployeeById(id));
             log.info("Log info: Get employer by id = " + id);
@@ -67,7 +67,7 @@ public class CompanyController {
     @GetMapping("/{id}/employees/find")
     public ResponseEntity<List<ITEmployeeDTO>> getEmployerByRole(
             @RequestParam(name = "role") ITRole role,
-            @PathVariable(name = "id") int company_id) {
+            @PathVariable(name = "id") long company_id) {
         try {
         List<ITEmployeeDTO> result = companyService.getEmployeeByRole(role, company_id)
                 .stream()
